@@ -4,10 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
-    <title>Document</title>
+    <title>Color Selector</title>
   </head>
   <body>
-    <input type="color" />
+    <div class="colorpicker_container">
+      <div class="colorbox"></div>
+      <label for="colorpicker">Select color</label>
+      <input type="color" id="colorpicker" />
+      <p class="hex">HEX: <span></span></p>
+      <p class="rgb">RGB: <span></span></p>
+      <p class="rgb">HSL: <span></span></p>
+    </div>
   </body>
   <script src="script.js"></script>
 </html>

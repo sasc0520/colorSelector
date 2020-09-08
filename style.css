@@ -4,6 +4,26 @@
 
 body {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   margin: 80px;
+}
+
+.colorbox {
+  border: 1px solid black;
+  border-radius: 10px;
+  width: 100px;
+  height: 100px;
+  margin-bottom: 20px;
+}
+
+.colorpicker_container {
+  background-color: beige;
+  padding: 50px;
+}
+
+p {
+  font-weight: 600;
+}
+
+span {
 }
