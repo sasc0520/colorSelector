@@ -68,9 +68,15 @@ function rgbtoHsl(r, g, b) {
   // multiply s and l by 100 to get the value in percent, rather than [0,1]
   s *= 100;
   l *= 100;
-  console.log("hsl(%f,%f%,%f%)", h, s, l); // just for testing
+
+  h = Number.parseInt(h, 10);
+  s = Number.parseInt(s, 10);
+  l = Number.parseInt(l, 10);
+  // console.log("hsl(%f,%f%,%f%)", h, s, l); // just for testing
+  let hsl = `${h}% ${s}% ${l}%`;
+  showHsl(hsl);
 }
 
-function showHsl() {}
-
-// console.log("hsl(%f,%f%,%f%)", h, s, l); // just for testing
+function showHsl(hsl) {
+  document.querySelector("body > div > p.hsl > span").innerHTML = hsl;
+}
