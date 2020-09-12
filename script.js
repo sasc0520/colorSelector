@@ -3,19 +3,29 @@
 window.addEventListener("load", initColor);
 
 function initColor() {
-  document.querySelector("#colorpicker").addEventListener("input", showHex);
+  document.querySelector("#colorpicker").addEventListener("input", selectColor);
 }
 
-function showHex() {
+function selectColor() {
   let hex = this.value;
-  document.querySelector("body > div > p.hex > span").innerHTML = hex;
-  document.querySelector("body > div > div").style.backgroundColor = hex;
+  showColor(hex);
+}
+function showColor(hex) {
+  showHex(hex);
+  let rgb = hexToRgb(hex);
+  showRgb(rgb);
+  let hsl = rgbtoHsl(rgb.r, rgb.g, rgb.b);
+  showHsl(hsl);
+}
 
-  hexToRgb(hex);
+function delegator(hex) {
+  let rgb = hexToRgb(hex);
+  let hsl = rgbtoHsl(rgb.r, rgb.g, rgb.b);
+  view({ hex, rgb, hsl });
 }
 
 function hexToRgb(hex) {
-  hex = document.querySelector("body > div > p.hex > span").innerHTML;
+  // hex = document.querySelector("body > div > p.hex > span").innerHTML;
   let r = hex.substring(1, 3);
   let g = hex.substring(3, 5);
   let b = hex.substring(5, 7);
@@ -23,15 +33,10 @@ function hexToRgb(hex) {
   r = Number.parseInt(r, 16);
   g = Number.parseInt(g, 16);
   b = Number.parseInt(b, 16);
-  let rgb = `${r} ${g} ${b}`;
 
-  // return { r, g, b };
-  showRgb(rgb);
-  rgbtoHsl(r, g, b);
-}
-
-function showRgb(rgb) {
-  document.querySelector("body > div > p.rgb > span").innerHTML = rgb;
+  return { r, g, b };
+  // showRgb(rgb);
+  // rgbtoHsl(r, g, b);
 }
 
 function rgbtoHsl(r, g, b) {
@@ -69,14 +74,32 @@ function rgbtoHsl(r, g, b) {
   s *= 100;
   l *= 100;
 
-  h = Number.parseInt(h, 10);
-  s = Number.parseInt(s, 10);
-  l = Number.parseInt(l, 10);
+  h = Math.floor(h);
+  s = Math.floor(s);
+  l = Math.floor(l);
   // console.log("hsl(%f,%f%,%f%)", h, s, l); // just for testing
-  let hsl = `${h}% ${s}% ${l}%`;
-  showHsl(hsl);
+  return { h, s, l };
+  // showHsl(hsl);
+}
+
+// function view(obj) {
+//   showHex(obj.hex);
+//   showRgb(obj.rgb);
+//   showHsl(obj.hsl);
+// }
+
+function showHex(hex) {
+  document.querySelector("body > div > p.hex > span").innerHTML = hex;
+  document.querySelector("body > div > div").style.backgroundColor = hex;
+  // hexToRgb(hex);
+}
+
+function showRgb(rgb) {
+  let rgbText = `${rgb.r} ${rgb.g} ${rgb.b}`;
+  document.querySelector("body > div > p.rgb > span").innerHTML = rgbText;
 }
 
 function showHsl(hsl) {
-  document.querySelector("body > div > p.hsl > span").innerHTML = hsl;
+  let hslText = `${hsl.h}% ${hsl.s}% ${hsl.l}%`;
+  document.querySelector("body > div > p.hsl > span").innerHTML = hslText;
 }
