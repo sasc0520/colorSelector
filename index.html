@@ -7,13 +7,27 @@
     <title>Color Selector</title>
   </head>
   <body>
+    <select name="harmonies" id="harmonies">
+      <option value="analogous">Analogous</option>
+      <option value="monochromatic">Monochromatic</option>
+      <option value="triad">Triad</option>
+      <option value="complementary">Complementary</option>
+      <option value="compound">Compound</option>
+      <option value="shades">Shades</option>
+    </select>
     <div class="colorpicker_container">
-      <div class="colorbox"></div>
-      <label for="colorpicker">Select color</label>
+      <label id="color_label" for="colorpicker">Select color</label>
       <input type="color" id="colorpicker" />
       <p class="hex">HEX: <span></span></p>
       <p class="rgb">RGB: <span></span></p>
       <p class="hsl">HSL: <span></span></p>
+      <div class="harmony_wrapper">
+        <div class="colorbox"></div>
+        <div class="colorbox"></div>
+        <div class="colorbox"></div>
+        <div class="colorbox"></div>
+        <div class="colorbox"></div>
+      </div>
     </div>
   </body>
   <script src="script.js"></script>

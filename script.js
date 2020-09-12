@@ -90,7 +90,9 @@ function rgbtoHsl(r, g, b) {
 
 function showHex(hex) {
   document.querySelector("body > div > p.hex > span").innerHTML = hex;
-  document.querySelector("body > div > div").style.backgroundColor = hex;
+  document.querySelector(
+    "body > div > div > div:nth-child(3)"
+  ).style.backgroundColor = hex;
   // hexToRgb(hex);
 }
 
