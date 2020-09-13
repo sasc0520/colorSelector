@@ -4,12 +4,17 @@ window.addEventListener("load", initColor);
 
 function initColor() {
   document.querySelector("#colorpicker").addEventListener("input", selectColor);
+  document.querySelector("select").addEventListener("change", () => {
+    let color = document.querySelector("#colorpicker").value;
+    selectColor(color);
+  });
 }
 
-function selectColor() {
+function selectColor(color) {
   let hex = this.value;
   showColor(hex);
 }
+
 function showColor(hex) {
   showHex(hex);
   let rgb = hexToRgb(hex);
@@ -25,7 +30,6 @@ function delegator(hex) {
 }
 
 function hexToRgb(hex) {
-  // hex = document.querySelector("body > div > p.hex > span").innerHTML;
   let r = hex.substring(1, 3);
   let g = hex.substring(3, 5);
   let b = hex.substring(5, 7);
@@ -35,8 +39,6 @@ function hexToRgb(hex) {
   b = Number.parseInt(b, 16);
 
   return { r, g, b };
-  // showRgb(rgb);
-  // rgbtoHsl(r, g, b);
 }
 
 function rgbtoHsl(r, g, b) {
@@ -77,23 +79,14 @@ function rgbtoHsl(r, g, b) {
   h = Math.floor(h);
   s = Math.floor(s);
   l = Math.floor(l);
-  // console.log("hsl(%f,%f%,%f%)", h, s, l); // just for testing
   return { h, s, l };
-  // showHsl(hsl);
 }
-
-// function view(obj) {
-//   showHex(obj.hex);
-//   showRgb(obj.rgb);
-//   showHsl(obj.hsl);
-// }
 
 function showHex(hex) {
   document.querySelector("body > div > p.hex > span").innerHTML = hex;
   document.querySelector(
     "body > div > div > div:nth-child(3)"
   ).style.backgroundColor = hex;
-  // hexToRgb(hex);
 }
 
 function showRgb(rgb) {
@@ -104,4 +97,140 @@ function showRgb(rgb) {
 function showHsl(hsl) {
   let hslText = `${hsl.h}% ${hsl.s}% ${hsl.l}%`;
   document.querySelector("body > div > p.hsl > span").innerHTML = hslText;
+}
+
+function getHarmony(hsl) {
+  // here we get the chosen harmony
+  let select = document.querySelector("select");
+  let selectedValue = select.options[select.selectedIndex].value;
+
+  let hslArray;
+
+  // switch is like if statements but in this case it makes more sense to make it with switch instead of if
+  switch (selectedValue) {
+    case "analogous":
+      hslArray = getAnalagous(hsl);
+      break;
+
+    case "monochromatic":
+      hslArray = getMonochromatic(hsl);
+      break;
+
+    case "triad":
+      hslArray = getTriad(hsl);
+      break;
+
+    case "complementary":
+      hslArray = getComplementary(hsl);
+      break;
+
+    case "compound":
+      hslArray = getCompound(hsl);
+      break;
+
+    case "shades":
+      hslArray = getShades(hsl);
+      break;
+  }
+
+  // her laves et loop, så vi ikke får minusværdier.
+  // Vi arbejder med en cirkel, og derfor skal vi sætte alle hsl værdier til at være indenfor 0 og 360.
+  hslArray.forEach((element) => {
+    if (element.h < 0) {
+      element.h = element.h + 360;
+    }
+    if (element.h > 360) {
+      element.h = element.h - 360;
+    }
+    if (element.l < 0) {
+      element.l = element.l + 360;
+    }
+    if (element.l > 360) {
+      element.l = element.l - 360;
+    }
+    if (element.s < 0) {
+      element.s = element.s + 360;
+    }
+    if (element.s > 360) {
+      element.s = element.s - 360;
+    }
+  });
+  return hslArray;
+}
+
+function getAnalagous(hsl) {
+  let hslArray = new Array(5);
+  hslArray[2] = hsl;
+
+  hslArray[0] = { h: hsl.h - 40, s: hsl.s, l: hsl.l };
+  hslArray[1] = { h: hsl.h - 40, s: hsl.s, l: hsl.l };
+  hslArray[3] = { h: hsl.h - 40, s: hsl.s, l: hsl.l };
+  hslArray[4] = { h: hsl.h - 40, s: hsl.s, l: hsl.l };
+
+  return hslArray;
+}
+
+function getMonochromatic(hsl) {
+  let hslArray = new Array(5);
+  hslArray[0] = hsl;
+
+  hslArray[1] = { h: hsl.h, s: hsl.s, l: hsl.l + 10 };
+  hslArray[2] = { h: hsl.h, s: hsl.s, l: hsl.l + 20 };
+  hslArray[3] = { h: hsl.h, s: hsl.s, l: hsl.l + 30 };
+  hslArray[4] = { h: hsl.h, s: hsl.s, l: hsl.l + 40 };
+
+  return hslArray;
+}
+
+function getTriad(hsl) {
+  let hslArray = new Array(5);
+  hslArray[0] = hsl;
+
+  hslArray[1] = { h: hsl.h + 60, s: hsl.s, l: hsl.l };
+  hslArray[2] = { h: hsl.h + 120, s: hsl.s, l: hsl.l };
+
+  return hslArray;
+}
+
+function getComplementary(hsl) {
+  let hslArray = new Array(5);
+  hslArray[0] = hsl;
+
+  hslArray[1] = { h: hsl.h + 180, s: hsl.s, l: hsl.l };
+
+  return hslArray;
+}
+
+function getCompound(hsl) {
+  let hslArray = new Array(5);
+  hslArray[0] = hsl;
+
+  hslArray[1] = { h: hsl.h + 180, s: hsl.s, l: hsl.l };
+  hslArray[2] = { h: hsl.h - 20, s: hsl.s, l: hsl.l };
+  hslArray[3] = { h: hsl.h + 20, s: hsl.s, l: hsl.l };
+  hslArray[4] = { h: hsl.h + 40, s: hsl.s, l: hsl.l };
+
+  return hslArray;
+}
+
+function getShades(hsl) {
+  let hslArray = new Array(5);
+  hslArray[0] = hsl;
+
+  hslArray[1] = { h: hsl.h, s: hsl.s, l: hsl.l + 20 };
+  hslArray[2] = { h: hsl.h, s: hsl.s, l: hsl.l - 20 };
+  hslArray[3] = { h: hsl.h, s: hsl.s, l: hsl.l + 40 };
+  hslArray[4] = { h: hsl.h, s: hsl.s, l: hsl.l - 40 };
+
+  return hslArray;
+}
+
+function getColorArray(hslArray) {
+  // all hsl values are taken from colorArray to convert them to an object
+  let colorArray = hslArray.map((hsl) => {
+    let rgb = hslToRgb(hsl.h, hsl.s, hsl.l);
+    let hex = rgbToHex(rgb);
+    return { hsl, hex, rgb };
+  });
+  return colorArray;
 }
