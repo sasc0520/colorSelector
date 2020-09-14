@@ -21,6 +21,7 @@ function showColor(hex) {
   showRgb(rgb);
   let hsl = rgbtoHsl(rgb.r, rgb.g, rgb.b);
   showHsl(hsl);
+  viewController(getColorArray(getHarmony(hsl)));
 }
 
 function delegator(hex) {
@@ -84,9 +85,7 @@ function rgbtoHsl(r, g, b) {
 
 function showHex(hex) {
   document.querySelector("body > div > p.hex > span").innerHTML = hex;
-  document.querySelector(
-    "body > div > div > div:nth-child(3)"
-  ).style.backgroundColor = hex;
+  document.querySelector(".colorbox").style.backgroundColor = hex;
 }
 
 function showRgb(rgb) {
@@ -233,4 +232,75 @@ function getColorArray(hslArray) {
     return { hsl, hex, rgb };
   });
   return colorArray;
+}
+
+function hslToRgb(h, s, l) {
+  h = h;
+  s = s / 100;
+  l = l / 100;
+
+  let c = (1 - Math.abs(2 * l - 1)) * s,
+    x = c * (1 - Math.abs(((h / 60) % 2) - 1)),
+    m = l - c / 2,
+    r = 0,
+    g = 0,
+    b = 0;
+  if (0 <= h && h < 60) {
+    r = c;
+    g = x;
+    b = 0;
+  } else if (60 <= h && h < 120) {
+    r = x;
+    g = c;
+    b = 0;
+  } else if (120 <= h && h < 180) {
+    r = 0;
+    g = c;
+    b = x;
+  } else if (180 <= h && h < 240) {
+    r = 0;
+    g = x;
+    b = c;
+  } else if (240 <= h && h < 300) {
+    r = x;
+    g = 0;
+    b = c;
+  } else if (300 <= h && h < 360) {
+    r = c;
+    g = 0;
+    b = x;
+  }
+  r = Math.round((r + m) * 255);
+  g = Math.round((g + m) * 255);
+  b = Math.round((b + m) * 255);
+
+  return { r, g, b };
+}
+
+function rgbToHex(rgb) {
+  let hexToRed = rgb.r.toString(16).padStart(2, "0");
+  let hexToGreen = rgb.g.toString(16).padStart(2, "0");
+  let hexToBlue = rgb.b.toString(16).padStart(2, "0");
+
+  return "#" + hexToRed + hexToGreen + hexToBlue;
+}
+
+function viewController(colorArray) {
+  let colors = document.querySelectorAll(".colorwrapper");
+  for (let i = 0; i < colors.length; i++) {
+    colors[i].classList.remove("hide");
+    if (colorArray[i]) {
+      showColorBox(colorArray[i].hex, colors[i]);
+    } else {
+      hideColor(colors[i]);
+    }
+  }
+}
+
+function hideColor(e) {
+  e.classList.add("hide");
+}
+
+function showColorBox(color, e) {
+  e.querySelector(".colorbox").style.backgroundColor = color;
 }
